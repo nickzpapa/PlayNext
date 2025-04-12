@@ -16,24 +16,21 @@ class Program
         var vidExtension = extensions.OrderByDescending(a => a.Count).First().Extension;
         var movies = files.Where(f => f.Contains(vidExtension));
 
-        if(movies.Count() >= 3) {
-            // Get next episode from save file
-            var saveFile = files.FirstOrDefault(f => f.EndsWith(".SAVE"));
-            var nextEpisode = saveFile == null ? 0 : int.Parse( Regex.Replace(saveFile, @"\D", "") );
-            nextEpisode = nextEpisode < movies.Count() ? nextEpisode : 0;
+        // Get next episode from save file
+        var saveFile = files.FirstOrDefault(f => f.EndsWith(".SAVE"));
+        var nextEpisode = saveFile == null ? 0 : int.Parse( Regex.Replace(saveFile, @"\D", "") );
+        nextEpisode = nextEpisode < movies.Count() ? nextEpisode : 0;
 
-            // Start the video with default program
-            Process.Start(new ProcessStartInfo { 
-                FileName = movies.ElementAt(nextEpisode), 
-                UseShellExecute = true 
-            });     
+        // Start the video with default program
+        Process.Start(new ProcessStartInfo { 
+            FileName = movies.ElementAt(nextEpisode), 
+            UseShellExecute = true 
+        });     
 
-            // Update Save File
-            if(saveFile != null) {
-                File.Delete(saveFile);
-            }
-            File.Create($"{nextEpisode+1}.SAVE");
+        // Update Save File
+        if(saveFile != null) {
+            File.Delete(saveFile);
         }
-
+        File.Create($"{nextEpisode+1}.SAVE"); 
     }
 }
